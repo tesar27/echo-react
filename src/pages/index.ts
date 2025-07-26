@@ -1,0 +1,5 @@
+export * from './AuthPage'
+export * from './Dashboard'
+export * from './VerifyEmailPage'
+export * from './ResendVerificationPage'
+export * from './NotFoundPage'
