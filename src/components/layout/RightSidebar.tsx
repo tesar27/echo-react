@@ -1,5 +1,8 @@
+import { useUsers } from "../../hooks/useUsers";
+import { Button } from "../ui";
 import { Search, MoreHorizontal } from "lucide-react";
 import { Card, CardHeader, CardContent, CardTitle } from "../ui";
+import type { UserProfile } from "../../types/user";
 
 interface TrendingItem {
   category: string;
@@ -7,11 +10,11 @@ interface TrendingItem {
   posts: string;
 }
 
-interface SuggestedUser {
-  name: string;
-  username: string;
-  bio: string;
-  isFollowing: boolean;
+interface UserCardProps {
+  user: UserProfile;
+  onFollow: (userId: number) => void;
+  onUnfollow: (userId: number) => void;
+  isLoading?: boolean;
 }
 
 function SearchBar() {
@@ -67,27 +70,50 @@ function TrendingCard() {
   );
 }
 
+function UserCard({ user, onFollow, onUnfollow, isLoading }: UserCardProps) {
+  const handleFollowClick = () => {
+    if (user.is_following) {
+      onUnfollow(user.id);
+    } else {
+      onFollow(user.id);
+    }
+  };
+
+  return (
+    <div className="p-3 hover:bg-gray-50 transition-colors">
+      <div className="flex items-start space-x-3">
+        <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0">
+          <span className="text-blue-600 font-semibold text-sm">
+            {user.display_name.charAt(0).toUpperCase()}
+          </span>
+        </div>
+
+        <div className="flex-1 min-w-0">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="font-bold text-gray-900 text-sm">
+                {user.display_name}
+              </p>
+              <p className="text-gray-500 text-sm">@{user.username}</p>
+            </div>
+            <Button
+              onClick={handleFollowClick}
+              disabled={isLoading}
+              variant={user.is_following ? "secondary" : "primary"}
+              className="px-4 py-1.5 text-sm rounded-full"
+            >
+              {user.is_following ? "Following" : "Follow"}
+            </Button>
+          </div>
+          {user.bio && <p className="text-gray-500 text-sm mt-1">{user.bio}</p>}
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function SuggestedFollowsCard() {
-  const suggestions: SuggestedUser[] = [
-    {
-      name: "React",
-      username: "reactjs",
-      bio: "The library for web and native user interfaces",
-      isFollowing: false,
-    },
-    {
-      name: "Vercel",
-      username: "vercel",
-      bio: "Develop. Preview. Ship. For the best frontend teams",
-      isFollowing: false,
-    },
-    {
-      name: "TypeScript",
-      username: "typescript",
-      bio: "TypeScript is a language for application scale JavaScript development",
-      isFollowing: false,
-    },
-  ];
+  const { suggestedUsers, loading, followUser, unfollowUser } = useUsers();
 
   return (
     <Card className="mb-4">
@@ -95,35 +121,32 @@ function SuggestedFollowsCard() {
         <CardTitle className="text-xl font-bold">Who to follow</CardTitle>
       </CardHeader>
       <CardContent className="p-0">
-        {suggestions.map((user, index) => (
-          <div key={index} className="p-3 hover:bg-gray-50 transition-colors">
-            <div className="flex items-start space-x-3">
-              <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0">
-                <span className="text-blue-600 font-semibold text-sm">
-                  {user.name.charAt(0).toUpperCase()}
-                </span>
-              </div>
-
-              <div className="flex-1 min-w-0">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="font-bold text-gray-900 text-sm">
-                      {user.name}
-                    </p>
-                    <p className="text-gray-500 text-sm">@{user.username}</p>
-                  </div>
-                  <button className="bg-black text-white px-4 py-1.5 rounded-full text-sm font-medium hover:bg-gray-800 transition-colors">
-                    Follow
-                  </button>
-                </div>
-                <p className="text-gray-500 text-sm mt-1">{user.bio}</p>
-              </div>
-            </div>
+        {loading ? (
+          <div className="p-4 text-center">
+            <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-blue-500 mx-auto"></div>
+            <p className="mt-2 text-gray-500 text-sm">Loading suggestions...</p>
           </div>
-        ))}
-        <div className="p-3">
-          <button className="text-blue-500 hover:underline">Show more</button>
-        </div>
+        ) : suggestedUsers.length > 0 ? (
+          <>
+            {suggestedUsers.slice(0, 3).map((user) => (
+              <UserCard
+                key={user.id}
+                user={user}
+                onFollow={followUser}
+                onUnfollow={unfollowUser}
+              />
+            ))}
+            <div className="p-3">
+              <button className="text-blue-500 hover:underline">
+                Show more
+              </button>
+            </div>
+          </>
+        ) : (
+          <div className="p-3 text-gray-500 text-sm">
+            No suggestions available
+          </div>
+        )}
       </CardContent>
     </Card>
   );
