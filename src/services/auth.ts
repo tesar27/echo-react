@@ -3,7 +3,6 @@ import type {
   AuthResponse,
   LoginCredentials,
   RegisterCredentials,
-  EmailVerificationRequest,
 } from '../types/auth'
 
 export class AuthService {
@@ -23,16 +22,6 @@ export class AuthService {
       this.setUser(response.user)
     }
     
-    return response
-  }
-
-  static async verifyEmail(token: string): Promise<{ message: string }> {
-    const response = await apiClient.get<{ message: string }>(`/auth/verify-email?token=${token}`)
-    return response
-  }
-
-  static async resendVerification(data: EmailVerificationRequest): Promise<{ message: string }> {
-    const response = await apiClient.post<{ message: string }>('/auth/resend-verification', data)
     return response
   }
 

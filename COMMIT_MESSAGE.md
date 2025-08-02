@@ -1,6 +1,7 @@
-feat: Complete Twitter/X-like social media functionality
+feat: Complete Twitter/X-like social media functionality (MVP)
 
 ✨ Core Features:
+- Simplified auth: username/password only (no email verification)
 - Post creation with 280-char limit and real-time counter
 - Like/unlike system with optimistic updates
 - Follow/unfollow users with suggested users sidebar
@@ -27,5 +28,6 @@ feat: Complete Twitter/X-like social media functionality
 - Accessibility features
 - Performance optimizations
 - Complete documentation
+- Streamlined MVP authentication flow
 
-All major social media interactions now functional and ready for backend integration.
+All major social media interactions functional. Ready for backend integration.

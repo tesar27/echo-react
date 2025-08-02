@@ -25,7 +25,6 @@ const registerSchema = z
         /^[a-zA-Z0-9_]+$/,
         "Username can only contain letters, numbers, and underscores"
       ),
-    email: z.string().email("Please enter a valid email address"),
     password: z
       .string()
       .min(8, "Password must be at least 8 characters")
@@ -86,8 +85,7 @@ export function RegisterForm({
       );
 
       setSuccess(
-        response.message ||
-          "Account created successfully! Please check your email to verify your account."
+        response.message || "Account created successfully! You can now sign in."
       );
       onSuccess?.();
     } catch (err) {
@@ -137,15 +135,6 @@ export function RegisterForm({
             error={errors.username?.message}
             placeholder="Choose a username"
             autoComplete="username"
-          />
-
-          <Input
-            label="Email"
-            type="email"
-            {...register("email")}
-            error={errors.email?.message}
-            placeholder="your@email.com"
-            autoComplete="email"
           />
 
           <div className="relative">

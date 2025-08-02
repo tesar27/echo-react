@@ -6,13 +6,7 @@ import {
 } from "react-router-dom";
 import { AuthProvider } from "./context/AuthContext";
 import { ProtectedRoute } from "./components/layout";
-import {
-  AuthPage,
-  Dashboard,
-  VerifyEmailPage,
-  ResendVerificationPage,
-  NotFoundPage,
-} from "./pages";
+import { AuthPage, Dashboard, NotFoundPage } from "./pages";
 
 function App() {
   return (
@@ -22,11 +16,6 @@ function App() {
           {/* Public routes */}
           <Route path="/login" element={<AuthPage />} />
           <Route path="/register" element={<AuthPage />} />
-          <Route path="/verify-email" element={<VerifyEmailPage />} />
-          <Route
-            path="/resend-verification"
-            element={<ResendVerificationPage />}
-          />
 
           {/* Protected routes */}
           <Route

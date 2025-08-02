@@ -23,7 +23,10 @@ export function AuthPage() {
           />
         ) : (
           <RegisterForm
-            onSuccess={() => setIsLogin(true)}
+            onSuccess={() => {
+              setIsLogin(true);
+              // Optionally show a success message here
+            }}
             onSwitchToLogin={() => setIsLogin(true)}
           />
         )}
